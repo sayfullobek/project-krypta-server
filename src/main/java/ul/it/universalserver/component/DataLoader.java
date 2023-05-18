@@ -7,15 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ul.it.universalserver.entity.Role;
-import ul.it.universalserver.entity.StakingPool;
-import ul.it.universalserver.entity.User;
+import ul.it.universalserver.entity.*;
 import ul.it.universalserver.entity.enums.Gander;
 import ul.it.universalserver.entity.enums.RoleName;
-import ul.it.universalserver.repository.AttachmentRepository;
-import ul.it.universalserver.repository.RoleRepository;
-import ul.it.universalserver.repository.StakingPoolsRepository;
-import ul.it.universalserver.repository.UserRepository;
+import ul.it.universalserver.repository.*;
 
 import java.util.Collections;
 import java.util.UUID;
@@ -34,6 +29,8 @@ public class DataLoader implements CommandLineRunner {
     private final AttachmentRepository attachmentRepository;
 
     private final StakingPoolsRepository stakingPoolsRepository;
+    private final AppSettingsRepository appSettingsRepository;
+    private final WalletRepository walletRepository;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String initMode;
@@ -59,6 +56,10 @@ public class DataLoader implements CommandLineRunner {
             stakingPoolsRepository.save(
                     stakingPool
             );
+            appSettingsRepository.save(new AppSettings(
+                    1, 10
+            ));
+            Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0));
             User save = userRepository.save(
                     new User(
                             "Sayfullo",
@@ -69,8 +70,9 @@ public class DataLoader implements CommandLineRunner {
                             Gander.MALE,
                             "?qozi",
                             true,
-                            Collections.singleton(roleRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("getRole"))),
-                            "phone"
+                            Collections.singletonList(roleRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("getRole"))),
+                            "phone",
+                            wallet
                     )
             );
         }

@@ -6,6 +6,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,10 +15,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ul.it.universalserver.entity.User;
+import ul.it.universalserver.entity.Wallet;
 import ul.it.universalserver.entity.enums.Gander;
 import ul.it.universalserver.payload.*;
+import ul.it.universalserver.repository.AppSettingsRepository;
 import ul.it.universalserver.repository.RoleRepository;
 import ul.it.universalserver.repository.UserRepository;
+import ul.it.universalserver.repository.WalletRepository;
 import ul.it.universalserver.security.JwtTokenProvider;
 
 import java.security.SecureRandom;
@@ -33,6 +37,8 @@ public class AuthService implements UserDetailsService {
     private final AttachmentService attachmentService;
     private final RoleRepository roleRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AppSettingsRepository appSettingsRepository;
+    private final WalletRepository walletRepository;
 
     @Autowired
     public PasswordEncoder passwordEncoder() {
@@ -46,7 +52,6 @@ public class AuthService implements UserDetailsService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-        System.out.println("salom");
         User user = new User();
         if (request.getStatus().equals("phone")) {
             user = userRepository.findUserByPhoneNumber(request.getUsername()).orElseThrow(() -> new ResourceNotFoundException("getUser"));
@@ -56,6 +61,23 @@ public class AuthService implements UserDetailsService {
         ResToken resToken = new ResToken(generateToken(request.getUsername(), request.getStatus()));
         System.out.println(ResponseEntity.ok(getMal(user, resToken)));
         return getMal(user, resToken);
+    }
+
+    public Apiresponse changePassword(UUID id, ChangePassword changePassword) {
+        Optional<User> byId = userRepository.findById(id);
+        if (byId.isPresent()) {
+            User user = byId.get();
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getStatus().equals("phone") ? user.getPhoneNumber() : user.getEmail(), changePassword.getOldPassword())
+            );
+            if (!changePassword.getNewPassword().equals(changePassword.getNewPrePassword())) {
+                return new Apiresponse("Yangi parol va tasdiqlash paroli bir xil bo'lishi shart", false);
+            }
+            user.setPassword(passwordEncoder().encode(changePassword.getNewPassword()));
+            userRepository.save(user);
+            return new Apiresponse("Parolingiz muvaffaqiyatli almashtirildi", true);
+        }
+        return new Apiresponse("Bunday accaount mavjud emas", false);
     }
 
     public ResRegister register(ReqRegister reqRegister) {
@@ -69,13 +91,16 @@ public class AuthService implements UserDetailsService {
             }
         }
         if (userRepository.existsUserByReferralCode(reqRegister.getReferralCode())) {
+            Wallet getAppSettings = new Wallet(appSettingsRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("getAppSettings")).getFirstPersonProfit(), 0, 0, 0);
+            Wallet save1 = walletRepository.save(getAppSettings);
             User user = User.builder()
                     .password(passwordEncoder().encode(reqRegister.getPassword()))
-                    .referralCode(createRandomCode(16))
-                    .role(Collections.singleton(roleRepository.findById(2).orElseThrow(() -> new ResourceNotFoundException("getRole"))))
+                    .referralCode(createRandomCode(6))
+                    .roles(Collections.singletonList(roleRepository.findById(2).orElseThrow(() -> new ResourceNotFoundException("getRole"))))
                     .status(reqRegister.getStatus())
-                    .firstName("")
-                    .lastName("")
+                    .firstName(createRandomCode(8))
+                    .lastName(createRandomCode(8))
+                    .wallet(save1) //birinchi marta kirgan odamlarga beriladigan pul
                     .agree(true)
                     .gander(Gander.valueOf("MALE"))
                     .photoId(UUID.fromString("be9ae603-64ca-4562-856e-947801d5d9f7"))
@@ -91,14 +116,21 @@ public class AuthService implements UserDetailsService {
             }
             User save = userRepository.save(user);
             ReqLogin build = ReqLogin.builder()
-                    .username(save.getUsername())
+                    .username(save.getStatus().equals("phone") ? save.getPhoneNumber() : save.getEmail())
                     .password(reqRegister.getPassword())
                     .status(reqRegister.getStatus())
                     .build();
             GetLogin login = login(build);
+            referralCodeNewStep(reqRegister.getReferralCode());
             return new ResRegister(login, new Apiresponse("muvaffaqiyatli ro'yxatdan o'tdingiz", true));
         }
         return new ResRegister(null, new Apiresponse("referral kodingizda xatolik", false));
+    }
+
+    public void referralCodeNewStep(String referralCode) {
+        User user = userRepository.findUserByReferralCode(referralCode).orElseThrow(() -> new ResourceNotFoundException("getUser"));
+        user.getWallet().setOffer(user.getWallet().getOffer() + 1);
+        userRepository.save(user);
     }
 
     public String createRandomCode(int codeLength) {
@@ -109,9 +141,7 @@ public class AuthService implements UserDetailsService {
             char c = chars[random.nextInt(chars.length)];
             sb.append(c);
         }
-        String output = sb.toString();
-        System.out.println(output);
-        return output;
+        return sb.toString();
     }
 
     @Override

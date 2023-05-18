@@ -77,4 +77,8 @@ public abstract class ServiceAbs {
     public Apiresponse deleteInvestment(UUID id) {
         return null;
     }
+
+    public Apiresponse sendFeedback(FeedBackDto feedBackDto) {
+        return null;
+    }
 }

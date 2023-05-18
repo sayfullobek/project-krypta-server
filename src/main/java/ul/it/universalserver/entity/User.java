@@ -8,6 +8,7 @@ import ul.it.universalserver.entity.template.AbsEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,8 +30,20 @@ public class User extends AbsEntity implements UserDetails {
 
     private String password; //paroli
 
-    @ManyToMany
-    private Set<Role> role; //roli
+    @OneToOne(optional = false)
+    private Wallet wallet;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private List<Role> roles; //roli
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_feedback",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "feedback_id")})
+    private List<Feedback> feedbacks; //shikoyati yoki ma'lumoti
 
     @Enumerated(value = EnumType.STRING)
     private Gander gander; //jinsi
@@ -52,7 +65,7 @@ public class User extends AbsEntity implements UserDetails {
     private boolean accountNonLocked = true; //ushbu account ochiq yoki yo'qligi
     private boolean accountNonExpired = true; //ushbu accountning muddati tugaganmi yoki yo'qmi
 
-    public User(String firstName, String lastName, String email, String phoneNumber, String password, Gander gander, String referralCode, boolean agree, Set<Role> role, String status) {
+    public User(String firstName, String lastName, String email, String phoneNumber, String password, Gander gander, String referralCode, boolean agree, List<Role> role, String status, Wallet wallet) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -61,22 +74,19 @@ public class User extends AbsEntity implements UserDetails {
         this.gander = gander;
         this.referralCode = referralCode;
         this.agree = agree;
-        this.role = role;
+        this.roles = role;
         this.status = status;
-    }
-
-    public String whatUsername() {
-        return status.equals("phone") ? phoneNumber : email;
+        this.wallet = wallet;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role;
+        return roles;
     }
 
     @Override
     public String getUsername() {
-        return whatUsername();
+        return status;
     }
 
     @Override

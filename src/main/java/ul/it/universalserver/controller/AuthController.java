@@ -5,10 +5,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ul.it.universalserver.entity.User;
-import ul.it.universalserver.payload.Apiresponse;
-import ul.it.universalserver.payload.ReqLogin;
-import ul.it.universalserver.payload.ReqRegister;
-import ul.it.universalserver.payload.ResRegister;
+import ul.it.universalserver.payload.*;
 import ul.it.universalserver.repository.UserRepository;
 import ul.it.universalserver.service.AuthService;
 
@@ -25,7 +22,6 @@ public class AuthController {
     private final
     UserRepository authRepository;
 
-
     @PostMapping("/login")
     public HttpEntity<?> login(@RequestBody ReqLogin request) {
         return ResponseEntity.ok(authService.login(request));
@@ -35,6 +31,12 @@ public class AuthController {
     public HttpEntity<?> register(@RequestBody ReqRegister reqRegister) {
         ResRegister register = authService.register(reqRegister);
         return ResponseEntity.status(register.getApiresponse().isSuccess() ? 200 : 409).body(register);
+    }
+
+    @PutMapping("/password-change/{id}")
+    public HttpEntity<?> passwordChange(@PathVariable UUID id, @RequestBody ChangePassword changePassword) {
+        Apiresponse apiresponse = authService.changePassword(id, changePassword);
+        return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
     }
 
     @PutMapping("/{id}")
@@ -57,5 +59,10 @@ public class AuthController {
     @PutMapping("/update/{id}")
     public HttpEntity<?> updateAbout(@PathVariable UUID id, @RequestBody ReqRegister reqRegister) {
         return ResponseEntity.ok(authService.updateAbout(id, reqRegister));
+    }
+
+    @GetMapping("/{id}")
+    public HttpEntity<?> getMe(@PathVariable UUID id) {
+        return ResponseEntity.ok(authRepository.findById(id));
     }
 }

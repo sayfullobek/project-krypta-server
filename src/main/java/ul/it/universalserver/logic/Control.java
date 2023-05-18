@@ -118,4 +118,12 @@ public abstract class Control {
     public HttpEntity<?> getOneInvestment(UUID id) {
         return null;
     }
+
+    public HttpEntity<?> sendFeedback(FeedBackDto feedBackDto) {
+        return null;
+    }
+
+    public HttpEntity<?> getFeedback() {
+        return null;
+    }
 }
