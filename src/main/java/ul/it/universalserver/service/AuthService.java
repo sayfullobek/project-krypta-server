@@ -1,5 +1,6 @@
 package ul.it.universalserver.service;
 
+import com.google.zxing.common.BitMatrix;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -38,6 +39,7 @@ public class AuthService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AppSettingsRepository appSettingsRepository;
+    private final QrCodeService qrCodeService;
     private final WalletRepository walletRepository;
 
     @Autowired
@@ -91,7 +93,7 @@ public class AuthService implements UserDetailsService {
             }
         }
         if (userRepository.existsUserByReferralCode(reqRegister.getReferralCode())) {
-            Wallet getAppSettings = new Wallet(appSettingsRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("getAppSettings")).getFirstPersonProfit(), 0, 0, 0);
+            Wallet getAppSettings = new Wallet(appSettingsRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("getAppSettings")).getFirstPersonProfit(), 0, 0, 0, 0);
             Wallet save1 = walletRepository.save(getAppSettings);
             User user = User.builder()
                     .password(passwordEncoder().encode(reqRegister.getPassword()))
@@ -102,6 +104,7 @@ public class AuthService implements UserDetailsService {
                     .lastName(createRandomCode(8))
                     .wallet(save1) //birinchi marta kirgan odamlarga beriladigan pul
                     .agree(true)
+                    .withAddressSize(0)
                     .gander(Gander.valueOf("MALE"))
                     .photoId(UUID.fromString("be9ae603-64ca-4562-856e-947801d5d9f7"))
                     .accountNonExpired(true)
@@ -122,6 +125,7 @@ public class AuthService implements UserDetailsService {
                     .build();
             GetLogin login = login(build);
             referralCodeNewStep(reqRegister.getReferralCode());
+//            BitMatrix bitMatrix = qrCodeService.generateQrCodeimage(save.getReferralCode(), 100, 100, "");
             return new ResRegister(login, new Apiresponse("muvaffaqiyatli ro'yxatdan o'tdingiz", true));
         }
         return new ResRegister(null, new Apiresponse("referral kodingizda xatolik", false));

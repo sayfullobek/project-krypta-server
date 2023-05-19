@@ -16,4 +16,5 @@ public class Wallet extends AbsEntity {
     private double AllInCome; //ja'mi daromad
     private double takeOff; //yechib olinga pullar hisobi
     private double offer; //necha kishini taklif qilgan
+    private Integer nechaMartaPulKiritgan;
 }

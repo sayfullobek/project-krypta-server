@@ -10,6 +10,7 @@ import ul.it.universalserver.repository.UserRepository;
 import ul.it.universalserver.service.AuthService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -61,8 +62,13 @@ public class AuthController {
         return ResponseEntity.ok(authService.updateAbout(id, reqRegister));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get-me/{id}")
     public HttpEntity<?> getMe(@PathVariable UUID id) {
-        return ResponseEntity.ok(authRepository.findById(id));
+        Optional<User> byId = authRepository.findById(id);
+        if (byId.isPresent()) {
+            User user = byId.get();
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.ok(new Apiresponse("kirish mumkin emas", false));
     }
 }

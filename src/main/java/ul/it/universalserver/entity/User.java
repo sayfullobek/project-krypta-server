@@ -53,8 +53,12 @@ public class User extends AbsEntity implements UserDetails {
 
     private UUID photoId; //rasmi
 
+    private Integer withAddressSize; //nechta addressi borligi
+
     @Column(nullable = false)
     private boolean agree; //foydalanuvchi bizning qoidalarimizga rosi yoki yo'qligi
+
+    private UUID qrCodeId;
 
     private String status;
 

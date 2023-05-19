@@ -126,4 +126,20 @@ public abstract class Control {
     public HttpEntity<?> getFeedback() {
         return null;
     }
+
+    public HttpEntity<?> addWithdrawal(WithdrawalDto withdrawalDto) {
+        return null;
+    }
+
+    public HttpEntity<?> getWithdrawalByUserId(UUID id) {
+        return null;
+    }
+
+    public HttpEntity<?> getAllWih() {
+        return null;
+    }
+
+    public HttpEntity<?> deleteWithdrawal(UUID id) {
+        return null;
+    }
 }

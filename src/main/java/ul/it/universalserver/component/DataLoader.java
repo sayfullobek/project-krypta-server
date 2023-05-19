@@ -59,7 +59,7 @@ public class DataLoader implements CommandLineRunner {
             appSettingsRepository.save(new AppSettings(
                     1, 10
             ));
-            Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0));
+            Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0, 0));
             User save = userRepository.save(
                     new User(
                             "Sayfullo",

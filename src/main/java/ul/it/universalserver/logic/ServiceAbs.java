@@ -1,7 +1,9 @@
 package ul.it.universalserver.logic;
 
+import ul.it.universalserver.entity.WithDrawalAddress;
 import ul.it.universalserver.payload.*;
 
+import java.util.List;
 import java.util.UUID;
 
 public abstract class ServiceAbs {
@@ -79,6 +81,14 @@ public abstract class ServiceAbs {
     }
 
     public Apiresponse sendFeedback(FeedBackDto feedBackDto) {
+        return null;
+    }
+
+    public Apiresponse addWithdrawal(WithdrawalDto withdrawalDto) {
+        return null;
+    }
+
+    public Apiresponse deleteWithdrawal(UUID id) {
         return null;
     }
 }
