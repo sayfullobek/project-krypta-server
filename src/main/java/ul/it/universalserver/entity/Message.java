@@ -5,7 +5,6 @@ import ul.it.universalserver.entity.template.AbsNameEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import java.util.Date;
 
@@ -18,9 +17,13 @@ import java.util.Date;
 public class Message extends AbsNameEntity {
     private Date whenWrite; //ushbu sms qachon yozildi
 
-    @Column(nullable = false, length = 1000000)
-    private String description; //ushbu sms haqida ma'lumot
+    @Column(nullable = false, length = 100000000)
+    private String uzDescription; //ushbu sms haqida ma'lumot
+    @Column(nullable = false, length = 100000000)
+    private String enDescription; //ushbu sms haqida ma'lumot
+    @Column(nullable = false, length = 100000000)
+    private String ruDescription; //ushbu sms haqida ma'lumot
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne
     private Notification notification;
 }

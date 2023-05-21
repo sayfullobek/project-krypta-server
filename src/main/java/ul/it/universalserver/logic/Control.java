@@ -70,6 +70,27 @@ public abstract class Control {
     }
 
 
+    public HttpEntity<?> getMessage(Integer id) {
+        return null;
+    }
+
+    public HttpEntity<?> addMessage(MessageDto messageDto) {
+        return null;
+    }
+
+    public HttpEntity<?> editMessage(Integer id, MessageDto messageDto) {
+        return null;
+    }
+
+    public HttpEntity<?> deleteMessage(Integer id) {
+        return null;
+    }
+
+    public HttpEntity<?> getOneMessage(Integer id) {
+        return null;
+    }
+
+
     //end asl control VIPS
 
     //sayfullo okeng boshladi tvar

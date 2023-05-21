@@ -5,7 +5,9 @@ import ul.it.universalserver.entity.template.AbsNameEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -21,4 +23,5 @@ public class Notification extends AbsNameEntity {
     private String description; //messenger haqida
 
     private Date systemInformationDate;
+
 }

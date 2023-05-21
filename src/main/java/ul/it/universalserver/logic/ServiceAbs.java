@@ -52,6 +52,18 @@ public abstract class ServiceAbs {
         return null;
     }
 
+    public Apiresponse addMessage(MessageDto messageDto) {
+        return null;
+    }
+
+    public Apiresponse editMessage(Integer id, MessageDto messageDto) {
+        return null;
+    }
+
+    public Apiresponse deleteMessage(Integer id) {
+        return null;
+    }
+
 
     //Asl Okang
     public Apiresponse addVips(VipsDto coinDto) {

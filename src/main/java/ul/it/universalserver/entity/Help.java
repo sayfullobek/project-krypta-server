@@ -21,5 +21,11 @@ public class Help extends AbsNameEntity {
     private HelpName helpName;
 
     @Column(nullable = false, length = 1000000)
-    private String info;
+    private String uzInfo;
+
+    @Column(nullable = false, length = 1000000)
+    private String enInfo;
+
+    @Column(nullable = false, length = 1000000)
+    private String ruInfo;
 }

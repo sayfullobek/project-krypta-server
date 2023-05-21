@@ -21,5 +21,9 @@ public interface CustomHelp {
 
     HelpName getHelpName();
 
-    String getInfo();
+    String getUzInfo();
+
+    String getEnInfo();
+
+    String getRuInfo();
 }
