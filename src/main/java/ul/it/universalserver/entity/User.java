@@ -60,6 +60,9 @@ public class User extends AbsEntity implements UserDetails {
 
     private UUID qrCodeId;
 
+    @ManyToOne
+    private VIPS vips;
+
     private String status;
 
     private boolean enabled = true; //ushbu account ishlayaptimi yoki yo'q

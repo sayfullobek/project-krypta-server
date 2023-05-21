@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/**", "/api/v1/attachment/**", "/api/v1/coin/**", "/api/v1/vips/**", "/api/v1/pools/**", "/api/v1/notification/**", "/api/v1/feedback/**", "/api/v1/withdrawal/**", "/api/v1/notification/message/**", "/api/v1/help**")
+                .antMatchers("/api/v1/auth/**", "/api/v1/attachment/**", "/api/v1/coin/**", "/api/v1/vips/**", "/api/v1/pools/**", "/api/v1/notification/**", "/api/v1/feedback/**", "/api/v1/withdrawal/**", "/api/v1/notification/message/**", "/api/v1/help**", "/api/v1/archive-pay/**")
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/api/language")
                 .permitAll()

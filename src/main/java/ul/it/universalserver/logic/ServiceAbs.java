@@ -64,6 +64,9 @@ public abstract class ServiceAbs {
         return null;
     }
 
+    public Apiresponse sendArchiveDto(ArchivePayDto archivePayDto) {
+        return null;
+    }
 
     //Asl Okang
     public Apiresponse addVips(VipsDto coinDto) {

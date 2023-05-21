@@ -4,6 +4,7 @@ import com.google.zxing.common.BitMatrix;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,15 +15,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import ul.it.universalserver.entity.User;
+import ul.it.universalserver.entity.VIPS;
 import ul.it.universalserver.entity.Wallet;
 import ul.it.universalserver.entity.enums.Gander;
 import ul.it.universalserver.payload.*;
-import ul.it.universalserver.repository.AppSettingsRepository;
-import ul.it.universalserver.repository.RoleRepository;
-import ul.it.universalserver.repository.UserRepository;
-import ul.it.universalserver.repository.WalletRepository;
+import ul.it.universalserver.repository.*;
 import ul.it.universalserver.security.JwtTokenProvider;
 
 import java.security.SecureRandom;
@@ -41,6 +41,7 @@ public class AuthService implements UserDetailsService {
     private final AppSettingsRepository appSettingsRepository;
     private final QrCodeService qrCodeService;
     private final WalletRepository walletRepository;
+    private final VipsRepository vipsRepository;
 
     @Autowired
     public PasswordEncoder passwordEncoder() {
@@ -117,6 +118,8 @@ public class AuthService implements UserDetailsService {
             } else {
                 user.setEmail(reqRegister.getEmail());
             }
+            VIPS vips = vipsRepository.findById(vipsRepository.findAll().get(0).getId()).orElseThrow(() -> new ResourceNotFoundException("getVips"));
+            user.setVips(vips);
             User save = userRepository.save(user);
             ReqLogin build = ReqLogin.builder()
                     .username(save.getStatus().equals("phone") ? save.getPhoneNumber() : save.getEmail())
@@ -207,5 +210,18 @@ public class AuthService implements UserDetailsService {
             return new Apiresponse("muvaffaqiyatli", true);
         }
         return new Apiresponse("sizga kirish mumkin emas", false);
+    }
+
+    public Apiresponse updateMyMoney(UUID id, MyMoneyDto myMoneyDto) {
+        Optional<User> byId = userRepository.findById(id);
+        if (byId.isPresent()) {
+            User user = byId.get();
+            user.getWallet().setNowMoney(user.getWallet().getNowMoney() + myMoneyDto.getMoney());
+            user.getWallet().setAllInCome(user.getWallet().getAllInCome() + myMoneyDto.getMoney());
+            user.getWallet().setNechaMartaPulKiritgan(user.getWallet().getNechaMartaPulKiritgan() + 1);
+            userRepository.save(user);
+            return new Apiresponse("muvaffaqiyatli o'tkazildi", true);
+        }
+        return new Apiresponse("Bunday foydalanuvchi mavjud emas", false);
     }
 }

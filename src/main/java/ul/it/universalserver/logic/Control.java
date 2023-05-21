@@ -91,6 +91,23 @@ public abstract class Control {
     }
 
 
+    public HttpEntity<?> getArchivePay() {
+        return null;
+    }
+
+    public HttpEntity<?> addArchivePay(ArchivePayDto archivePayDto) {
+        return null;
+    }
+
+    public HttpEntity<?> getOneArchivePayByUserId(UUID id) {
+        return null;
+    }
+
+    public HttpEntity<?> getOneArchivePay(UUID id) {
+        return null;
+    }
+
+
     //end asl control VIPS
 
     //sayfullo okeng boshladi tvar

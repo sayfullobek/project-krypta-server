@@ -15,15 +15,13 @@ import java.util.Date;
 @Builder
 @Entity
 public class Message extends AbsNameEntity {
-    private Date whenWrite; //ushbu sms qachon yozildi
-
-    @Column(nullable = false, length = 100000000)
+    @Column(nullable = false, length = 1000000)
     private String uzDescription; //ushbu sms haqida ma'lumot
-    @Column(nullable = false, length = 100000000)
+    @Column(nullable = false, length = 1000000)
     private String enDescription; //ushbu sms haqida ma'lumot
-    @Column(nullable = false, length = 100000000)
+    @Column(nullable = false, length = 1000000)
     private String ruDescription; //ushbu sms haqida ma'lumot
-
+    private Date whenWrite; //ushbu sms qachon yozildi
     @ManyToOne
     private Notification notification;
 }

@@ -16,7 +16,7 @@ import java.util.UUID;
 public class VIPS extends AbsEntity {
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private UUID photoId;//ushbu vipning rasmi
 
     @Column(nullable = false)
@@ -48,4 +48,5 @@ public class VIPS extends AbsEntity {
 
     @Column(nullable = false)
     private boolean active; //ushbu vip faolmi yoki yo'q
+
 }

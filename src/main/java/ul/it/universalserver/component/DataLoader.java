@@ -31,6 +31,7 @@ public class DataLoader implements CommandLineRunner {
     private final StakingPoolsRepository stakingPoolsRepository;
     private final AppSettingsRepository appSettingsRepository;
     private final WalletRepository walletRepository;
+    private final VipsRepository vipsRepository;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String initMode;
@@ -59,6 +60,10 @@ public class DataLoader implements CommandLineRunner {
             appSettingsRepository.save(new AppSettings(
                     1, 10
             ));
+            VIPS vips = new VIPS(
+                    "0-sonli kon hovuzi", UUID.fromString("727e1c66-3a6c-429e-8332-e12b9a1de421"), 100, 10000, 3, 2, 3, 3, 3, 3, 2, true
+            );
+            vipsRepository.save(vips);
             Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0, 0));
             User save = userRepository.save(
                     new User(

@@ -71,4 +71,10 @@ public class AuthController {
         }
         return ResponseEntity.ok(new Apiresponse("kirish mumkin emas", false));
     }
+
+    @PutMapping("/me-money-send/{id}")
+    public HttpEntity<?> updateMyMoney(@PathVariable UUID id, @RequestBody MyMoneyDto myMoneyDto) {
+        Apiresponse apiresponse = authService.updateMyMoney(id, myMoneyDto);
+        return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
+    }
 }
