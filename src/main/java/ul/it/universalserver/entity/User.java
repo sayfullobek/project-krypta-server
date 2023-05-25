@@ -48,10 +48,14 @@ public class User extends AbsEntity implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Gander gander; //jinsi
 
+    private String whoseReferralCode;
+
     @Column(nullable = false, unique = true)
     private String referralCode; //referral code
 
     private UUID photoId; //rasmi
+
+    private String aPasswordThatCannotBeForgotten;
 
     private Integer withAddressSize; //nechta addressi borligi
 

@@ -29,6 +29,10 @@ public class FeedbackService extends ServiceAbs {
             Feedback build = Feedback.builder()
                     .feedbackName(FeedbackName.valueOf(feedBackDto.getFeedbackName()))
                     .information(feedBackDto.getInformation())
+                    .firstName(getUser.getFirstName())
+                    .lastName(getUser.getLastName())
+                    .phoneNumber(getUser.getPhoneNumber())
+                    .email(getUser.getEmail())
                     .build();
             Feedback save = feedBackRepository.save(build);
             getUser.getFeedbacks().add(save);

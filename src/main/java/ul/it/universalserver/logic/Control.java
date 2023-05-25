@@ -180,4 +180,36 @@ public abstract class Control {
     public HttpEntity<?> deleteWithdrawal(UUID id) {
         return null;
     }
+
+    public HttpEntity<?> updateAboutApp(UUID id, AboutTheAppDto aboutTheAppDto) {
+        return null;
+    }
+
+    public HttpEntity<?> getAboutApp() {
+        return null;
+    }
+
+    public HttpEntity<?> addInvestmentUser(InvestmentUserDto investmentUserDto) {
+        return null;
+    }
+
+    public HttpEntity<?> getAllInvestmentUser() {
+        return null;
+    }
+
+    public HttpEntity<?> getOneInvestByUser() {
+        return null;
+    }
+
+    public HttpEntity<?> addDeposit(DepositDto depositDto) {
+        return null;
+    }
+
+    public HttpEntity<?> getAllDeposit() {
+        return null;
+    }
+
+    public HttpEntity<?> getDepositByUser(UUID id) {
+        return null;
+    }
 }

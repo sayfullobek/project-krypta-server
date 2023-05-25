@@ -1,35 +1,26 @@
 package ul.it.universalserver.service;
 
-import com.google.zxing.common.BitMatrix;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import ul.it.universalserver.entity.User;
-import ul.it.universalserver.entity.VIPS;
-import ul.it.universalserver.entity.Wallet;
+import ul.it.universalserver.entity.*;
 import ul.it.universalserver.entity.enums.Gander;
 import ul.it.universalserver.payload.*;
 import ul.it.universalserver.repository.*;
 import ul.it.universalserver.security.JwtTokenProvider;
 
 import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +33,9 @@ public class AuthService implements UserDetailsService {
     private final QrCodeService qrCodeService;
     private final WalletRepository walletRepository;
     private final VipsRepository vipsRepository;
+    private final ArchivePayRepository archivePayRepository;
+    private final WithdrawalAddressRepository withdrawalAddressRepository;
+    private final WithdrawalRequestRepository withdrawalRequestRepository;
 
     @Autowired
     public PasswordEncoder passwordEncoder() {
@@ -94,7 +88,7 @@ public class AuthService implements UserDetailsService {
             }
         }
         if (userRepository.existsUserByReferralCode(reqRegister.getReferralCode())) {
-            Wallet getAppSettings = new Wallet(appSettingsRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("getAppSettings")).getFirstPersonProfit(), 0, 0, 0, 0);
+            Wallet getAppSettings = new Wallet(appSettingsRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("getAppSettings")).getFirstPersonProfit(), 0, 0, 0, 0, 0);
             Wallet save1 = walletRepository.save(getAppSettings);
             User user = User.builder()
                     .password(passwordEncoder().encode(reqRegister.getPassword()))
@@ -120,6 +114,7 @@ public class AuthService implements UserDetailsService {
             }
             VIPS vips = vipsRepository.findById(vipsRepository.findAll().get(0).getId()).orElseThrow(() -> new ResourceNotFoundException("getVips"));
             user.setVips(vips);
+            user.setWhoseReferralCode(reqRegister.getReferralCode());
             User save = userRepository.save(user);
             ReqLogin build = ReqLogin.builder()
                     .username(save.getStatus().equals("phone") ? save.getPhoneNumber() : save.getEmail())
@@ -215,13 +210,68 @@ public class AuthService implements UserDetailsService {
     public Apiresponse updateMyMoney(UUID id, MyMoneyDto myMoneyDto) {
         Optional<User> byId = userRepository.findById(id);
         if (byId.isPresent()) {
-            User user = byId.get();
-            user.getWallet().setNowMoney(user.getWallet().getNowMoney() + myMoneyDto.getMoney());
-            user.getWallet().setAllInCome(user.getWallet().getAllInCome() + myMoneyDto.getMoney());
-            user.getWallet().setNechaMartaPulKiritgan(user.getWallet().getNechaMartaPulKiritgan() + 1);
-            userRepository.save(user);
-            return new Apiresponse("muvaffaqiyatli o'tkazildi", true);
+            Optional<ArchivePay> archiBy = archivePayRepository.findById(myMoneyDto.getArchiveId());
+            if (archiBy.isPresent()) {
+                User user = byId.get();
+                ArchivePay archivePay = archiBy.get();
+                archivePay.setPulTushdimi(true);
+                user.getWallet().setNowMoney(user.getWallet().getNowMoney() + myMoneyDto.getMoney());
+                user.getWallet().setAllInCome(user.getWallet().getAllInCome() + myMoneyDto.getMoney());
+                user.getWallet().setNechaMartaPulKiritgan(user.getWallet().getNechaMartaPulKiritgan() + 1);
+                User getUser = userRepository.findUserByReferralCode(user.getWhoseReferralCode()).orElseThrow(() -> new ResourceNotFoundException("getUser"));
+                getUser.getWallet().setNowMoney(getUser.getWallet().getNowMoney() + ((myMoneyDto.getMoney() * appSettingsRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("getAppSettings")).getInterestByReferral()) / 100));
+                userRepository.save(user);
+                userRepository.save(getUser);
+                archivePayRepository.save(archivePay);
+                return new Apiresponse("muvaffaqiyatli o'tkazildi", true);
+            }
+            return new Apiresponse("Bunday pul o'tkazmasi mavjud emas", false);
         }
         return new Apiresponse("Bunday foydalanuvchi mavjud emas", false);
+    }
+
+    public Apiresponse meWithdrawalOfMoneyFromTheAccount(UUID id, MoneyExitDto moneyExitDto) {
+        Optional<User> byId = userRepository.findById(id);
+        if (byId.isPresent()) {
+            Optional<WithDrawalAddress> withById = withdrawalAddressRepository.findById(moneyExitDto.getWithdrawalId());
+            if (withById.isPresent()) {
+                User user = byId.get();
+                if (user.getWallet().getNowMoney() >= moneyExitDto.getMoney()) {
+                    WithDrawalAddress withDrawalAddress = withById.get();
+                    user.getWallet().setNowMoney(user.getWallet().getNowMoney() - moneyExitDto.getMoney());
+                    user.getWallet().setTakeOff(user.getWallet().getTakeOff() + moneyExitDto.getMoney());
+                    WithdrawalRequest withdrawalRequest = WithdrawalRequest.builder()
+                            .money(moneyExitDto.getMoney())
+                            .withDrawalAddress(Collections.singletonList(withDrawalAddress))
+                            .whenDidHeSendTheRequest(new Date())
+                            .wasTheMoneyThrownAway(false)
+                            .build();
+                    userRepository.save(user);
+                    withdrawalRequestRepository.save(withdrawalRequest);
+                    return new Apiresponse("so'rov yuborildi iltimos kuting", true);
+                }
+                return new Apiresponse("Sizda mablag' yetarli emas", false);
+            }
+            return new Apiresponse("Addressda xatolik bor iltimos qayta urinib ko'ring", false);
+        }
+        return new Apiresponse("Bunday foydalanuvchi mavjud emas", false);
+    }
+
+    public Apiresponse confirmationWithReq(UUID id, MoneyExitDto moneyExitDto) {
+        Optional<WithdrawalRequest> byId = withdrawalRequestRepository.findById(id);
+        if (byId.isPresent()) {
+            WithdrawalRequest withdrawalRequest = byId.get();
+            withdrawalRequest.setWasTheMoneyThrownAway(true);
+            withdrawalRequestRepository.save(withdrawalRequest);
+            return new Apiresponse("muvaffaqiyatli tasdiqladingiz", true);
+        }
+        return new Apiresponse("bunday pul yechilishi mavju emas", false);
+    }
+
+    public Apiresponse cantForgetPasswordAdd(UUID id, ReqRegister reqRegister) {
+        User getUser = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("getUser"));
+        getUser.setAPasswordThatCannotBeForgotten(reqRegister.getCantForgetPassword());
+        userRepository.save(getUser);
+        return new Apiresponse("successlly saved", true);
     }
 }

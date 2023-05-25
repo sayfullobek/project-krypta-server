@@ -5,8 +5,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ul.it.universalserver.entity.User;
+import ul.it.universalserver.entity.WithdrawalRequest;
 import ul.it.universalserver.payload.*;
 import ul.it.universalserver.repository.UserRepository;
+import ul.it.universalserver.repository.WithdrawalRequestRepository;
 import ul.it.universalserver.service.AuthService;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class AuthController {
 
     private final
     UserRepository authRepository;
+    private final WithdrawalRequestRepository withdrawalRequestRepository;
 
     @PostMapping("/login")
     public HttpEntity<?> login(@RequestBody ReqLogin request) {
@@ -75,6 +78,38 @@ public class AuthController {
     @PutMapping("/me-money-send/{id}")
     public HttpEntity<?> updateMyMoney(@PathVariable UUID id, @RequestBody MyMoneyDto myMoneyDto) {
         Apiresponse apiresponse = authService.updateMyMoney(id, myMoneyDto);
+        return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
+    }
+
+    @PutMapping("/me-withdrawal-of-money-from-the-account/{id}")
+    public HttpEntity<?> withdrawalOfMoneyFromTheAccount(@PathVariable UUID id, @RequestBody MoneyExitDto moneyExitDto) { //pulni xisobidan yechib olish
+        Apiresponse apiresponse = authService.meWithdrawalOfMoneyFromTheAccount(id, moneyExitDto);
+        return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
+    }
+
+    @PutMapping("/me-withdrawal-of-money-from-the-account/confirmation/{id}")
+    public HttpEntity<?> confirmation(@PathVariable UUID id, @RequestBody MoneyExitDto moneyExitDto) { //pulni otkazilganini tasdiqlash
+        Apiresponse apiresponse = authService.confirmationWithReq(id, moneyExitDto);
+        return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
+    }
+
+
+    @GetMapping("/list-of-funds-to-be-withdrawn")
+    public HttpEntity<?> getListWithdrawalExit() {
+        List<WithdrawalRequest> all = withdrawalRequestRepository.findAll();
+        return ResponseEntity.ok(all);
+    }
+
+    @GetMapping("/list-of-funds-to-be-withdrawn/{id}")
+    public HttpEntity<?> getListWithdrawalExitGetOne(@PathVariable UUID id) {
+        Optional<WithdrawalRequest> byId = withdrawalRequestRepository.findById(id);
+        if (byId.isPresent()) return ResponseEntity.ok(byId.get());
+        return ResponseEntity.ok(null);
+    }
+
+    @PutMapping("/a-password-that-cannot-be-forgotten/{id}")
+    public HttpEntity<?> cannotForgetPasswordAdd(@PathVariable UUID id, @RequestBody ReqRegister reqRegister) {
+        Apiresponse apiresponse = authService.cantForgetPasswordAdd(id, reqRegister);
         return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
     }
 }

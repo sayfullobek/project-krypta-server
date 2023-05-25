@@ -30,4 +30,6 @@ public class ReqRegister {
     private boolean agree; //foydalanuvchi bizning qoidalarimizga rosi yoki yo'qligi
 
     private String status;
+
+    private String cantForgetPassword;
 }

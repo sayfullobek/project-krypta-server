@@ -11,7 +11,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MyMoneyDto {
-    private UUID archiveId;
+public class MoneyExitDto {
+    private UUID id;
+    private UUID withdrawalId;
     private double money;
 }

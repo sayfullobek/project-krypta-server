@@ -1,6 +1,7 @@
 package ul.it.universalserver.logic;
 
-import ul.it.universalserver.entity.WithDrawalAddress;
+import ul.it.universalserver.entity.Deposit;
+import ul.it.universalserver.entity.InvestmentUser;
 import ul.it.universalserver.payload.*;
 
 import java.util.List;
@@ -104,6 +105,26 @@ public abstract class ServiceAbs {
     }
 
     public Apiresponse deleteWithdrawal(UUID id) {
+        return null;
+    }
+
+    public Apiresponse updateAboutApp(UUID id, AboutTheAppDto aboutTheAppDto) {
+        return null;
+    }
+
+    public Apiresponse addInvestmentUser(InvestmentUserDto investmentUserDto) {
+        return null;
+    }
+
+    public List<InvestmentUser> getUserByInvestment(UUID id) {
+        return null;
+    }
+
+    public Apiresponse addDeposit(DepositDto depositDto) {
+        return null;
+    }
+
+    public List<Deposit> getUserByDeposit(UUID id) {
         return null;
     }
 }

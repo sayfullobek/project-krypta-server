@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 public class WithDrawalAddress extends AbsEntity {
     @ManyToOne(optional = false)
     private User user;
-
     private String valyutaType; //balyuta turi
     private String primaryTarmoq; //asosiy tarmoq
     private String nickName; //taxallus

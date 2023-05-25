@@ -32,6 +32,7 @@ public class DataLoader implements CommandLineRunner {
     private final AppSettingsRepository appSettingsRepository;
     private final WalletRepository walletRepository;
     private final VipsRepository vipsRepository;
+    private final AboutTheAppRepository aboutTheAppRepository;
 
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String initMode;
@@ -58,13 +59,27 @@ public class DataLoader implements CommandLineRunner {
                     stakingPool
             );
             appSettingsRepository.save(new AppSettings(
-                    1, 10
+                    1, 10, 20
             ));
             VIPS vips = new VIPS(
                     "0-sonli kon hovuzi", UUID.fromString("727e1c66-3a6c-429e-8332-e12b9a1de421"), 100, 10000, 3, 2, 3, 3, 3, 3, 2, true
             );
             vipsRepository.save(vips);
-            Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0, 0));
+            Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0, 0, 0));
+
+            AboutTheApp build = AboutTheApp.builder()
+                    .uzAbout("ushbu programma zo'r")
+                    .enAbout("this is app very good")
+                    .ruAbout("mallades")
+                    .dayAppLaunched(1)
+                    .howMuchMoneyApp(10)
+                    .appContactLink("https://qozi.com")
+                    .build();
+            build.setId(UUID.fromString("727e1c66-3a6c-429e-8332-e12b9a1de422"));
+            aboutTheAppRepository.save(
+                    build
+            );
+
             User save = userRepository.save(
                     new User(
                             "Sayfullo",

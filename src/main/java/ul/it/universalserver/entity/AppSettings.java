@@ -19,5 +19,6 @@ public class AppSettings {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private double firstPersonProfit; //birinchi kirga insonga qancha pul beriladi
+    private double firstPersonProfit; //birinchi kirgan insonga qancha pul beriladi
+    private double interestByReferral; //referal kodi orqali kirib pul tashlagan odamga necha foiz beriladi
 }
