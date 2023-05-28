@@ -61,10 +61,10 @@ public class DataLoader implements CommandLineRunner {
             appSettingsRepository.save(new AppSettings(
                     1, 10, 20
             ));
-            VIPS vips = new VIPS(
-                    "VIP 1", UUID.fromString("727e1c66-3a6c-429e-8332-e12b9a1de421"), 100, 500, 0.50, 0, true
-            );
-            vipsRepository.save(vips);
+//             VIPS vips = new VIPS(
+//                     "VIP 1", UUID.fromString("727e1c66-3a6c-429e-8332-e12b9a1de421"), 100, 500, 0.50, 0, true
+//             );
+//             vipsRepository.save(vips);
             Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0, 0, 0, 0, 0, 0));
 
             AboutTheApp build = AboutTheApp.builder()
