@@ -116,8 +116,8 @@ public class AuthService implements UserDetailsService {
             } else {
                 user.setEmail(reqRegister.getEmail());
             }
-            VIPS vips = vipsRepository.findById(vipsRepository.findAll().get(0).getId()).orElseThrow(() -> new ResourceNotFoundException("getVips"));
-            user.setVips(vips);
+//             VIPS vips = vipsRepository.findById(vipsRepository.findAll().get(0).getId()).orElseThrow(() -> new ResourceNotFoundException("getVips"));
+            user.setVips(null);
             user.setWhoseReferralCode(reqRegister.getReferralCode());
             User save = userRepository.save(user);
             ReqLogin build = ReqLogin.builder()
