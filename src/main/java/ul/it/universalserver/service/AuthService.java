@@ -303,11 +303,13 @@ public class AuthService implements UserDetailsService {
 
     public Apiresponse updateMoneyFriendsProfit(@PathVariable UUID id, @RequestBody FriendsProfitDto friendsProfitDto) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("getUser"));
-        double friend = 0.01 / 28813;
-        user.getWallet().setFriendsProfit(user.getWallet().getFriendsProfit() + friend);
-        double money = user.getVips().getShareRatio() / 28813;
-        user.getWallet().setTheMoneyHeInvested(user.getWallet().getTheMoneyHeInvested() + money);
-        user.getWallet().setNowMoney(user.getWallet().getNowMoney() + friend + money);
+        double friend = ((user.getWallet().getFriendsProfit() * 0.001) / 100) / 28813;
+        if (user.getVips() != null) {
+            double money = ((user.getWallet().getTheMoneyHeInvested() * user.getVips().getShareRatio()) / 100) / 28813;
+            user.getWallet().setTheMoneyHeInvested(user.getWallet().getTheMoneyHeInvested() + money);
+            user.getWallet().setNowMoney(user.getWallet().getNowMoney() + money);
+        }
+        user.getWallet().setNowMoney(user.getWallet().getNowMoney() + friend);
         userRepository.save(user);
         return new Apiresponse("success", true);
     }
