@@ -18,4 +18,7 @@ public class Wallet extends AbsEntity {
     private double offer; //necha kishini taklif qilgan
     private double howManyTimesDidHeWithdrawMoney; //necha marta pul yechib olgan
     private Integer nechaMartaPulKiritgan;
+    private double theMoneyHeInvested; //o'zi kiritgan pul
+    private double friendsProfit; //do'stlaridan kelgan foiz
+    private double vipMoney; //vipdagi qurilmadagi pul
 }

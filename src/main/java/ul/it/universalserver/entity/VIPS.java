@@ -17,7 +17,7 @@ public class VIPS extends AbsEntity {
     private String name;
 
     @Column(nullable = false)
-    private UUID photoId;//ushbu vipning rasmi
+    private UUID photoId;//ushbu vipning qurilmasining rasmi
 
     @Column(nullable = false)
     private double minQuantifyAmount; //vip uchun minimum pul miqdori
@@ -26,27 +26,11 @@ public class VIPS extends AbsEntity {
     private double maxQuantifyAmount; //vip uchun maximal pul miqdori
 
     @Column(nullable = false)
-    private double shareRatio; //vip uchun ulush miqdori
+    private double shareRatio; //vip uchun foiz miqdori
 
     @Column(nullable = false)
-    private double effectiveEmount; //samarali miqdor
-
-    @Column(nullable = false)
-    private Integer directlyPromoteMembers; //a'zolarni bevosita targib qilish
-
-    @Column(nullable = false)
-    private Integer secondThridGenerationMembers; //ikkinchi va uchinchi avlod vakillari
-
-    @Column(nullable = false)
-    private double profits; //foyda
-
-    @Column(nullable = false)
-    private Integer metaGORobotsAvailablePerDay; //metaGO robotlari kuniga mavjud
-
-    @Column(nullable = false)
-    private double teamAward; //jamoa mukofoti foizi
+    private Integer alfaRobotsAvailablePerDay; //alfa coinda necha marta menet qilsa boladi
 
     @Column(nullable = false)
     private boolean active; //ushbu vip faolmi yoki yo'q
-
 }
