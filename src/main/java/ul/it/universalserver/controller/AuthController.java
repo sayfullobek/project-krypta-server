@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ul.it.universalserver.entity.History;
 import ul.it.universalserver.entity.User;
 import ul.it.universalserver.entity.WithdrawalRequest;
 import ul.it.universalserver.payload.*;
@@ -72,7 +73,7 @@ public class AuthController {
             User user = byId.get();
             return ResponseEntity.ok(user);
         }
-        return ResponseEntity.ok(new Apiresponse("kirish mumkin emas", false));
+        return null;
     }
 
     @PutMapping("/me-money-send/{id}")
@@ -110,6 +111,18 @@ public class AuthController {
     @PutMapping("/a-password-that-cannot-be-forgotten/{id}")
     public HttpEntity<?> cannotForgetPasswordAdd(@PathVariable UUID id, @RequestBody ReqRegister reqRegister) {
         Apiresponse apiresponse = authService.cantForgetPasswordAdd(id, reqRegister);
+        return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
+    }
+
+    @GetMapping("/get-me-history/{id}")
+    public HttpEntity<?> getMeHistory(@PathVariable UUID id) {
+        List<History> histories = authService.GetHistoryByUser(id);
+        return ResponseEntity.ok(histories);
+    }
+
+    @PutMapping("/profit-by-vip/{id}")
+    public HttpEntity<?> updateMoneyFriendsProfit(@PathVariable UUID id, @RequestBody FriendsProfitDto friendsProfitDto) {
+        Apiresponse apiresponse = authService.updateMoneyFriendsProfit(id, friendsProfitDto);
         return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
     }
 }

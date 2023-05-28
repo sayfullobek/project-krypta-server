@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ul.it.universalserver.logic.Control;
 import ul.it.universalserver.payload.Apiresponse;
+import ul.it.universalserver.payload.ReqRegister;
+import ul.it.universalserver.payload.VipInUserDto;
 import ul.it.universalserver.payload.VipsDto;
 import ul.it.universalserver.repository.VipsRepository;
 import ul.it.universalserver.service.VipsServise;
@@ -32,6 +34,12 @@ public class VipsController extends Control {
     @PostMapping
     public HttpEntity<?> addVips(@RequestBody VipsDto vipsDto) {
         Apiresponse apiresponse = vipsServise.addVips(vipsDto);
+        return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
+    }
+
+    @PutMapping("/vip-in-user/{id}")
+    public HttpEntity<?> updateVipInUser(@PathVariable UUID id, @RequestParam(name = "vipId") UUID vipId) {
+        Apiresponse apiresponse = vipsServise.updateVipInUser(id, vipId);
         return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
     }
 

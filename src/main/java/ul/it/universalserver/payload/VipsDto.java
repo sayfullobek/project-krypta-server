@@ -15,26 +15,15 @@ public class VipsDto {
     private UUID id;
     private String name;
 
-    private UUID photoId;//ushbu vipning rasmi
+    private UUID photoId;
 
-    private double minQuantifyAmount; //vip uchun minimum pul miqdori
+    private double minQuantifyAmount;
 
-    private double maxQuantifyAmount; //vip uchun maximal pul miqdori
+    private double maxQuantifyAmount;
 
-    private double shareRatio; //vip uchun ulush miqdori
+    private double shareRatio;
 
-    private double effectiveEmount; //samarali miqdor
+    private Integer alfaRobotsAvailablePerDay;
 
-    private Integer directlyPromoteMembers; //a'zolarni bevosita targib qilish
-
-    private Integer secondThridGenerationMembers; //ikkinchi va uchinchi avlod vakillari
-
-    private double profits; //foyda
-
-    private Integer metaGORobotsAvailablePerDay; //metaGO robotlari kuniga mavjud
-
-    private double teamAward; //jamoa mukofoti foizi
-
-    private boolean active; //ushbu vip faolmi yoki yo'q
-
+    private boolean active;
 }

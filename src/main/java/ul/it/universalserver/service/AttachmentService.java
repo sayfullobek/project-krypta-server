@@ -61,6 +61,6 @@ public class AttachmentService {
         AttachmentContent attachmentContent = attachmentContentRepository.findByAttachmentId(attachment.getId());
         attachmentContentRepository.delete(attachmentContent);
         attachmentRepository.deleteById(id);
-        return ResponseEntity.ok().body(new Apiresponse("o'chirildi", true));
+        return ResponseEntity.ok().body(new Apiresponse("deleted", true));
     }
 }
