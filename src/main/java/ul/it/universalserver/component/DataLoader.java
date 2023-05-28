@@ -68,6 +68,11 @@ public class DataLoader implements CommandLineRunner {
             Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0, 0, 0, 0, 0, 0));
 
             AboutTheApp build = AboutTheApp.builder()
+                    .uzAbout("2013 -2023")
+                    .enAbout("2013 -2023")
+                    .ruAbout("2013 -2023")
+                    .dayAppLaunched(3650)
+                    .howMuchMoneyApp(12765438)
                     .appContactLink("https://qozi.com")
                     .build();
             build.setId(UUID.fromString("727e1c66-3a6c-429e-8332-e12b9a1de422"));
