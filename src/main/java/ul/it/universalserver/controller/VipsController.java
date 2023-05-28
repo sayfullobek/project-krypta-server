@@ -56,6 +56,12 @@ public class VipsController extends Control {
         Apiresponse apiresponse = vipsServise.deleteVips(id);
         return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
     }
+    
+    @PutMapping("/upload-photo/{id}")
+    public HttpEntity<?> uptadePhoto(@PathVariable UUID id, @RequestBody VipsDto vipsDto) {
+        Apiresponse apiresponse = vipsServise.editVipPhoto(id, vipsDto);
+        return ResponseEntity.status(apiresponse.isSuccess() ? 200 : 409).body(apiresponse);
+    }
 
     @Override
     @GetMapping("/{id}")
