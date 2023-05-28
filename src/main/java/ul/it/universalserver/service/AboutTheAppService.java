@@ -38,6 +38,6 @@ public class AboutTheAppService extends ServiceAbs {
                 break;
         }
         aboutTheAppRepository.save(getApp);
-        return new Apiresponse("saved successfully", true);
+        return new Apiresponse("muvaffaqiyatli saqlandi", true);
     }
 }

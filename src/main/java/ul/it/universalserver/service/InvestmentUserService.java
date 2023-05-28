@@ -36,7 +36,8 @@ public class InvestmentUserService extends ServiceAbs {
         String[] infoMe = investmentUserDto.getInfo().split(" - ");
         String by = infoMe[0];
         String to = infoMe[1];
-        String about = "Your money has been converted from Exchange " + by + " to Exchange " + to + " and deposited into your account";
+        String about = "Sizning pulingiz " + by + " Birjasidan " + to + " Birjasiga aylantirildi va sizning hisobingizga tashlab berildi";
+
         InvestmentUser build = InvestmentUser.builder()
                 .vips(Collections.singletonList(vips))
                 .money(investmentUserDto.getMoney())
@@ -45,7 +46,7 @@ public class InvestmentUserService extends ServiceAbs {
                 .howManyBack(foiz)
                 .build();
         investmentUserRepository.save(build);
-        return new Apiresponse("The money has been transferred to your account", true);
+        return new Apiresponse("Pul xisobingizga o'tkazildi", true);
     }
 
     @Override

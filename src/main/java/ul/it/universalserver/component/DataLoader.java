@@ -62,10 +62,10 @@ public class DataLoader implements CommandLineRunner {
                     1, 10, 20
             ));
             VIPS vips = new VIPS(
-                    "VIP 0", UUID.fromString("727e1c66-3a6c-429e-8332-e12b9a1de421"), 100, 500, 0.01, 0, true
+                    "0-sonli kon hovuzi", UUID.fromString("727e1c66-3a6c-429e-8332-e12b9a1de421"), 100, 10000, 3, 2, 3, 3, 3, 3, 2, true
             );
             vipsRepository.save(vips);
-            Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0, 0, 0, 0, 0, 0));
+            Wallet wallet = walletRepository.save(new Wallet(0, 0, 0, 0, 0, 0));
 
             AboutTheApp build = AboutTheApp.builder()
                     .uzAbout("ushbu programma zo'r")

@@ -34,9 +34,9 @@ public class WithdrawalService extends ServiceAbs {
             withRepo.save(build);
             user.setWithAddressSize(user.getWithAddressSize() + 1);
             userRepository.save(user);
-            return new Apiresponse("saved successfully", true);
+            return new Apiresponse("muvaffaqiyatli saqlandi", true);
         }
-        return new Apiresponse("It is not possible to open an address for you", false);
+        return new Apiresponse("sizga address ochish mumkin emas", false);
     }
 
     @Override
@@ -45,8 +45,8 @@ public class WithdrawalService extends ServiceAbs {
         if (byId.isPresent()) {
             WithDrawalAddress withDrawalAddress = byId.get();
             withRepo.delete(withDrawalAddress);
-            return new Apiresponse("Deleted successfully", true);
+            return new Apiresponse("Muvaffaqiyatli o'chirildi", true);
         }
-        return new Apiresponse("no such address exists", false);
+        return new Apiresponse("bunday address mavjud emas", false);
     }
 }

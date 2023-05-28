@@ -30,7 +30,7 @@ public class NotificationService extends ServiceAbs {
         build.setEnName(notificationDto.getEnName());
         build.setRuName(notificationDto.getRuName());
         notificationRepository.save(build);
-        return new Apiresponse(notificationDto.getUzName() + " message has been sent to all", true);
+        return new Apiresponse(notificationDto.getUzName() + " nomli xabar hammaga yuborildi", true);
     }
 
     @Override

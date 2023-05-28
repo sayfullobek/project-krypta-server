@@ -37,8 +37,8 @@ public class FeedbackService extends ServiceAbs {
             Feedback save = feedBackRepository.save(build);
             getUser.getFeedbacks().add(save);
             userRepository.save(getUser);
-            return new Apiresponse("sent successfully", true);
+            return new Apiresponse("muvaffaqiyatli yuborildi", true);
         }
-        return new Apiresponse("There is an error in your information", false);
+        return new Apiresponse("Sizning ma'lumotingizda xatolik mavjud", false);
     }
 }

@@ -26,6 +26,6 @@ public class ArchivePayService extends ServiceAbs {
                 .pulTushdimi(false)
                 .build();
         archivePayRepository.save(getArchivePay);
-        return new Apiresponse("saved successfully", true);
+        return new Apiresponse("muvaffaqiyatli saqlandi", true);
     }
 }
