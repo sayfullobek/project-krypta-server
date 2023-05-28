@@ -38,14 +38,22 @@ public class VipsServise extends ServiceAbs {
         return new Apiresponse(vipsDto.getName() + "nomli VIp saqlandi", true);
     }
 
-    @Override
+   @Override
     public Apiresponse editVips(UUID id, VipsDto vipsDto) {
         boolean existName = vipsRepository.existsVIPSByNameEqualsIgnoreCaseAndIdNot(vipsDto.getName(), id);
         if (existName) return new Apiresponse("Bunday vip avvaldan mavjud", false);
         VIPS vips = vipsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("getVIPS"));
         vips.setName(vipsDto.getName());
+        vips.setShareRatio(vipsDto.getShareRatio());
         vipsRepository.save(vips);
         return new Apiresponse(vips.getName() + " nomli vips " + vipsDto.getName() + " ga Taxrirlandi", true);
+    }
+
+    public Apiresponse editVipPhoto(UUID id, VipsDto vipsDto) {
+        VIPS vips = vipsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("getVips"));
+        vips.setPhotoId(vipsDto.getPhotoId());
+        vipsRepository.save(vips);
+        return new Apiresponse("Successfull upload photo", true);
     }
 
     @Override
