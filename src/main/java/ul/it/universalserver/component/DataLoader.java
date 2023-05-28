@@ -88,7 +88,7 @@ public class DataLoader implements CommandLineRunner {
                             "+998990763246",
                             passwordEncoder.encode("admin123"),
                             Gander.MALE,
-                            "?qozi",
+                            "Ref123",
                             true,
                             Collections.singletonList(roleRepository.findById(1).orElseThrow(() -> new ResourceNotFoundException("getRole"))),
                             "phone",
